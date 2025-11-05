@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal-App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="home">
+            <header>
+                <h1><i class="fas fa-book"></i> Journal-App</h1>
+                <button id="settings-btn" class="icon-btn"><i class="fas fa-cog"></i></button>
+            </header>
+            <main>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search" placeholder="Cari catatan...">
+                </div>
+                <div id="note-list"></div>
+            </main>
+            <button id="add-btn" class="fab"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div id="settings" class="hidden">
+            <header>
+                <button id="back-settings" class="icon-btn"><i class="fas fa-arrow-left"></i></button>
+                <h1>Pengaturan</h1>
+            </header>
+            <main>
+                <div class="setting-item">
+                    <label for="dark-mode-toggle">Mode Gelap</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item clickable" id="theme-btn">
+                    <div class="setting-content">
+                        <i class="fas fa-palette"></i>
+                        <span>Tema Warna</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="setting-item clickable" id="feedback-btn">
+                    <div class="setting-content">
+                        <i class="fas fa-comment"></i>
+                        <span>Umpan Balik</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="version"><i class="fas fa-info-circle"></i> Versi 1.01.05</p>
+            </main>
+        </div>
+
+        <div id="add-note" class="hidden">
+            <header>
+                <button id="back-add" class="icon-btn"><i class="fas fa-arrow-left"></i></button>
+                <h1><i class="fas fa-plus"></i> Tambah Catatan</h1>
+                <button id="mood-btn" class="icon-btn">😙</button>
+            </header>
+            <main>
+                <input type="text" id="note-title" placeholder="Judul">
+                <textarea id="note-content" placeholder="Tulis catatan..."></textarea>
+            </main>
+            <button id="save-note" class="fab"><i class="fas fa-check"></i></button>
+        </div>
+
+        <div id="view-note" class="hidden">
+            <header>
+                <button id="back-view" class="icon-btn"><i class="fas fa-arrow-left"></i></button>
+                <h1 id="view-title"></h1>
+                <span id="view-mood" class="mood-display"></span>
+            </header>
+            <main class="view-note-content">
+                <div id="view-content"></div>
+            </main>
+            <div id="view-actions">
+                <button id="edit-note" class="icon-btn"><i class="fas fa-edit"></i></button>
+                <button id="custom-date-btn" class="icon-btn" disabled><i class="fas fa-calendar-alt"></i></button>
+                <button id="save-edit" class="icon-btn" disabled><i class="fas fa-check"></i></button>
+                <button id="delete-note" class="icon-btn"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+
+        <div id="mood-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-smile"></i> Pilih Mood</h2>
+                    <button class="close-modal icon-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mood-options">
+                        <button class="mood-option" data-mood="😙">😙</button>
+                        <button class="mood-option" data-mood="😄">😄</button>
+                        <button class="mood-option" data-mood="🙂">🙂</button>
+                        <button class="mood-option" data-mood="🥲">🥲</button>
+                        <button class="mood-option" data-mood="😶">😶</button>
+                        <button class="mood-option" data-mood="😢">😢</button>
+                        <button class="mood-option" data-mood="😞">😞</button>
+                        <button class="mood-option" data-mood="😮‍💨">😮‍💨</button>
+                        <button class="mood-option" data-mood="😡">😡</button>
+                        <button class="mood-option" data-mood="😳">😳</button>
+                        <button class="mood-option" data-mood="🤧">🤧</button>
+                        <button class="mood-option" data-mood="😱">😱</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="delete-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Hapus Catatan</h2>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus catatan ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn btn-secondary"><i class="fas fa-times"></i> Batal</button>
+                    <button class="confirm-btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="validation-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-exclamation-circle"></i> Peringatan</h2>
+                </div>
+                <div class="modal-body">
+                    <p id="validation-message">Judul catatan tidak boleh kosong!</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="confirm-btn btn-primary"><i class="fas fa-check"></i> Mengerti</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-comment"></i> Umpan Balik</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="contact-options">
+                        <div class="contact-item" data-type="email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Gmail</span>
+                        </div>
+                        <div class="contact-item" data-type="whatsapp">
+                            <i class="fas fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="theme-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-palette"></i> Tema Warna</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="theme-options">
+                        <div class="theme-option" data-theme="red">
+                            <div class="theme-color red"></div>
+                            <span>Merah</span>
+                        </div>
+                        <div class="theme-option" data-theme="orange">
+                            <div class="theme-color orange"></div>
+                            <span>Oren</span>
+                        </div>
+                        <div class="theme-option" data-theme="yellow">
+                            <div class="theme-color yellow"></div>
+                            <span>Kuning</span>
+                        </div>
+                        <div class="theme-option" data-theme="green">
+                            <div class="theme-color green"></div>
+                            <span>Hijau</span>
+                        </div>
+                        <div class="theme-option" data-theme="blue">
+                            <div class="theme-color blue"></div>
+                            <span>Biru</span>
+                        </div>
+                        <div class="theme-option" data-theme="purple">
+                            <div class="theme-color purple"></div>
+                            <span>Ungu</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="date-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-calendar-alt"></i> Kustom Tanggal & Waktu</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="date-inputs">
+                        <div class="input-group">
+                            <label for="custom-date">Tanggal</label>
+                            <input type="date" id="custom-date">
+                        </div>
+                        <div class="input-group">
+                            <label for="custom-time">Waktu</label>
+                            <input type="time" id="custom-time">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn btn-secondary"><i class="fas fa-times"></i> Batal</button>
+                    <button class="confirm-btn btn-primary" id="save-date-btn"><i class="fas fa-check"></i> Simpan</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="options-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header center">
+                    <h2><i class="fas fa-ellipsis-h"></i> Opsi Catatan</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="options-list">
+                        <button id="pin-option" class="option-item">
+                            <i class="fas fa-thumbtack"></i>
+                            <span>Pin</span>
+                        </button>
+                        <button id="delete-option" class="option-item">
+                            <i class="fas fa-trash"></i>
+                            <span>Hapus</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn btn-secondary"><i class="fas fa-times"></i> Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="db/db.js"></script>
+    <script src="script/script.js"></script>
+</body>
+</html>
